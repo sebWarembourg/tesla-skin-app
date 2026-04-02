@@ -23,6 +23,19 @@ async function getAudioDuration(arrayBuffer) {
   return decoded.duration;
 }
 
+function ConstraintBar({ items }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {items.map(({ label, value, warn }) => (
+        <div key={label} className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[10px] font-mono ${warn ? "border-amber-500/30 bg-amber-500/5 text-amber-400" : "border-zinc-700/60 bg-white/[0.02] text-zinc-500"}`}>
+          <span className="text-zinc-600 uppercase tracking-widest text-[9px]">{label}</span>
+          <span className={warn ? "text-amber-400" : "text-zinc-300"}>{value}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Boombox() {
   const [files, setFiles] = useState([]); // [{ name, originalName, url, duration, size }]
   const [isDragging, setIsDragging] = useState(false);
@@ -142,6 +155,13 @@ export default function Boombox() {
           onChange={(e) => addFiles(e.target.files)}
         />
         {error && <p className="text-red-400 text-xs">{error}</p>}
+        <ConstraintBar items={[
+          { label: "Formats", value: "MP3 · WAV · OGG · AAC" },
+          { label: "Fichiers max", value: "5", warn: count >= MAX_FILES },
+          { label: "Durée jouée", value: "5s max", warn: files.some(f => f.duration > WARN_DURATION) },
+          { label: "Noms", value: "Sans espaces" },
+          { label: "Clé USB", value: "exFAT / FAT32" },
+        ]} />
       </div>
 
       {/* File list */}
