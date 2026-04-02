@@ -125,7 +125,7 @@ export default function LockChime() {
 
       {/* Upload */}
       <div className="flex flex-col gap-3">
-        <p className="text-zinc-500 text-xs tracking-[4px] uppercase">01 — Fichier audio source</p>
+        <p className="text-zinc-400 text-[10px] tracking-[4px] uppercase">01 — Fichier audio source</p>
         <div
           onClick={() => fileInputRef.current?.click()}
           onDrop={handleDrop}
@@ -136,7 +136,7 @@ export default function LockChime() {
             "cursor-pointer transition-all duration-200",
             isDragging
               ? "border-[#e31937] bg-[#e31937]/5"
-              : "border-zinc-800 bg-white/[0.02] hover:border-zinc-600",
+              : "border-zinc-700 bg-white/[0.02] hover:border-zinc-500",
           ].join(" ")}
         >
           {fileName && !processing ? (
@@ -145,18 +145,18 @@ export default function LockChime() {
               {duration !== null && (
                 <p className="text-zinc-500 text-xs mt-1">{formatDuration(duration)}</p>
               )}
-              <p className="text-zinc-600 text-xs mt-3">Clique pour changer</p>
+              <p className="text-zinc-500 text-xs mt-3">Clique pour changer</p>
             </div>
           ) : processing ? (
             <div className="text-center">
               <div className="w-8 h-8 border-2 border-zinc-700 border-t-[#e31937] rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-zinc-500 text-xs">Conversion…</p>
+              <p className="text-zinc-400 text-xs">Conversion…</p>
             </div>
           ) : (
             <div className="text-center px-8 py-10">
               <div className="text-4xl opacity-30 mb-3">♪</div>
-              <p className="text-zinc-400 text-sm">Clique ou glisse un fichier audio</p>
-              <p className="text-zinc-600 text-xs mt-1">MP3, WAV, OGG, AAC, M4A…</p>
+              <p className="text-zinc-300 text-sm">Clique ou glisse un fichier audio</p>
+              <p className="text-zinc-500 text-xs mt-1">MP3, WAV, OGG, AAC, M4A…</p>
             </div>
           )}
         </div>
@@ -173,20 +173,20 @@ export default function LockChime() {
       {/* Result */}
       {wavUrl && !processing && (
         <div className="flex flex-col gap-3">
-          <p className="text-zinc-500 text-xs tracking-[4px] uppercase">02 — Résultat</p>
+          <p className="text-zinc-400 text-[10px] tracking-[4px] uppercase">02 — Résultat</p>
 
-          <div className="bg-white/[0.03] border border-zinc-800 rounded-xl p-5 flex flex-col gap-4">
+          <div className="bg-white/[0.03] border border-zinc-700 rounded-xl p-5 flex flex-col gap-4">
 
             {/* Infos */}
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-black/30 rounded-lg p-3">
-                <p className="text-zinc-600 text-xs uppercase tracking-widest mb-1">Durée</p>
+                <p className="text-zinc-500 text-xs uppercase tracking-widest mb-1">Durée</p>
                 <p className={`text-sm font-mono ${tooLong ? "text-amber-400" : "text-zinc-200"}`}>
                   {formatDuration(duration)}
                 </p>
               </div>
               <div className="bg-black/30 rounded-lg p-3">
-                <p className="text-zinc-600 text-xs uppercase tracking-widest mb-1">Taille</p>
+                <p className="text-zinc-500 text-xs uppercase tracking-widest mb-1">Taille</p>
                 <p className={`text-sm font-mono ${tooLarge ? "text-red-400" : "text-zinc-200"}`}>
                   {formatSize(wavSize)}
                 </p>
@@ -207,12 +207,12 @@ export default function LockChime() {
 
             {/* Audio preview */}
             <div>
-              <p className="text-zinc-600 text-xs uppercase tracking-widest mb-2">Aperçu</p>
+              <p className="text-zinc-400 text-xs uppercase tracking-widest mb-2">Aperçu</p>
               <audio controls src={wavUrl} className="w-full h-9" style={{ colorScheme: "dark" }} />
             </div>
 
             {/* Specs */}
-            <div className="text-zinc-600 text-xs font-mono border-t border-zinc-800 pt-3 flex gap-4">
+            <div className="text-zinc-500 text-xs font-mono border-t border-zinc-700 pt-3 flex gap-4">
               <span>WAV PCM</span>
               <span>44 100 Hz</span>
               <span>16-bit</span>

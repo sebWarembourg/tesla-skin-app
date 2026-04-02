@@ -13,31 +13,38 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("skin");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-[#0f0f1a] to-black flex flex-col items-center px-4 py-10">
+    <div className="relative min-h-screen bg-gradient-to-b from-[#080810] via-[#0c0c18] to-[#080810] flex flex-col items-center px-4 py-12 overflow-hidden">
 
-      <div className="text-center mb-10">
-        <p className="text-[#e31937] text-xs font-semibold tracking-[6px] uppercase mb-2">
+      {/* Tech dot grid */}
+      <div className="dot-grid" />
+
+      {/* Header */}
+      <div className="relative text-center mb-10 z-10">
+        <div className="glow-red" />
+        <p className="text-[#e31937] text-[10px] font-semibold tracking-[8px] uppercase mb-3">
           Tesla Wrap Studio
         </p>
-        <h1 className="text-3xl md:text-5xl font-light tracking-widest text-white">
-          Personalisation
+        <h1 className="text-4xl md:text-6xl font-extralight tracking-[0.2em] text-white">
+          PERSONALISATION
         </h1>
-        <p className="text-zinc-500 text-sm mt-3 max-w-sm">
+        <div className="mt-4 mx-auto w-16 h-px bg-gradient-to-r from-transparent via-[#e31937]/60 to-transparent" />
+        <p className="text-zinc-400 text-sm mt-4 max-w-sm tracking-wide">
           Customise ta Tesla — skin visuel et son de verrouillage.
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-white/[0.04] border border-zinc-800 rounded-xl p-1 mb-10">
-        {TABS.map((tab) => (
+      <div className="relative z-10 flex border border-zinc-700/50 rounded-lg overflow-hidden mb-10 bg-black/30 backdrop-blur-sm">
+        {TABS.map((tab, i) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={[
-              "px-5 py-2 rounded-lg text-xs font-semibold tracking-[2px] uppercase transition-all duration-200",
+              "px-6 py-2.5 text-[10px] font-semibold tracking-[3px] uppercase transition-all duration-200 relative",
+              i < TABS.length - 1 ? "border-r border-zinc-700/50" : "",
               activeTab === tab.id
                 ? "bg-[#e31937] text-white"
-                : "text-zinc-500 hover:text-zinc-300",
+                : "text-zinc-400 hover:text-white hover:bg-white/5",
             ].join(" ")}
           >
             {tab.label}
@@ -45,8 +52,10 @@ export default function Home() {
         ))}
       </div>
 
-      {activeTab === "skin" && <SkinGenerator />}
-      {activeTab === "lockchime" && <LockChime />}
+      <div className="relative z-10 w-full flex justify-center">
+        {activeTab === "skin" && <SkinGenerator />}
+        {activeTab === "lockchime" && <LockChime />}
+      </div>
     </div>
   );
 }

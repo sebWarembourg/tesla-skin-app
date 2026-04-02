@@ -8,7 +8,7 @@ function Slider({ label, value, min, max, step, onChange, format }) {
   return (
     <div className="flex flex-col gap-1">
       <div className="flex justify-between items-center">
-        <span className="text-zinc-500 text-xs uppercase tracking-widest">{label}</span>
+        <span className="text-zinc-400 text-xs uppercase tracking-widest">{label}</span>
         <span className="text-zinc-300 text-xs font-mono">{format(value)}</span>
       </div>
       <input
@@ -131,7 +131,7 @@ export default function SkinGenerator() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
 
       <div className="flex flex-col gap-3">
-        <p className="text-zinc-500 text-xs tracking-[4px] uppercase">01 — Texture source</p>
+        <p className="text-zinc-400 text-[10px] tracking-[4px] uppercase">01 — Texture source</p>
         <div
           onClick={() => fileInputRef.current?.click()}
           onDrop={handleDrop}
@@ -142,7 +142,7 @@ export default function SkinGenerator() {
             "cursor-pointer transition-all duration-200 overflow-hidden",
             isDragging
               ? "border-[#e31937] bg-[#e31937]/5"
-              : "border-zinc-800 bg-white/[0.02] hover:border-zinc-600",
+              : "border-zinc-700 bg-white/[0.02] hover:border-zinc-500",
           ].join(" ")}
         >
           {imageSrc ? (
@@ -150,8 +150,8 @@ export default function SkinGenerator() {
           ) : (
             <div className="text-center px-8 py-10">
               <div className="text-4xl opacity-30 mb-3">↑</div>
-              <p className="text-zinc-400 text-sm">Clique ou glisse une image</p>
-              <p className="text-zinc-600 text-xs mt-1">PNG, JPG, WebP…</p>
+              <p className="text-zinc-300 text-sm">Clique ou glisse une image</p>
+              <p className="text-zinc-500 text-xs mt-1">PNG, JPG, WebP…</p>
             </div>
           )}
         </div>
@@ -164,7 +164,7 @@ export default function SkinGenerator() {
         />
 
         {imageSrc && (
-          <div className="bg-white/[0.03] border border-zinc-800 rounded-xl p-4 flex flex-col gap-4">
+          <div className="bg-white/[0.03] border border-zinc-700 rounded-xl p-4 flex flex-col gap-4">
             <Slider
               label="Rotation"
               value={rotation}
@@ -210,12 +210,12 @@ export default function SkinGenerator() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <p className="text-zinc-500 text-xs tracking-[4px] uppercase">02 — Skin généré</p>
-        <div className="border-2 border-zinc-800 rounded-xl min-h-[280px] flex flex-col items-center justify-center bg-white/[0.02] overflow-hidden">
+        <p className="text-zinc-400 text-[10px] tracking-[4px] uppercase">02 — Skin généré</p>
+        <div className="border-2 border-zinc-700 rounded-xl min-h-[280px] flex flex-col items-center justify-center bg-white/[0.02] overflow-hidden">
           {processing && (
             <div className="text-center">
               <div className="w-8 h-8 border-2 border-zinc-700 border-t-[#e31937] rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-zinc-500 text-xs">Génération…</p>
+              <p className="text-zinc-400 text-xs">Génération…</p>
             </div>
           )}
           {!processing && resultSrc && (
@@ -224,7 +224,7 @@ export default function SkinGenerator() {
           {!processing && !resultSrc && (
             <div className="text-center px-8 py-10">
               <div className="text-4xl opacity-20 mb-3">🚗</div>
-              <p className="text-zinc-600 text-sm">En attente d&apos;une texture…</p>
+              <p className="text-zinc-500 text-sm">En attente d&apos;une texture…</p>
             </div>
           )}
         </div>
