@@ -24,10 +24,10 @@ export default function Home() {
       <div className="relative text-center mb-10 z-10">
         <div className="glow-red" />
         <p className="text-[#e31937] text-[10px] font-semibold tracking-[8px] uppercase mb-3">
-          Personalisation
+          Tesla Personalisation
         </p>
         <h1 className="text-4xl md:text-6xl font-extralight tracking-[0.2em] text-white">
-          SEB TESLA STUDIO
+          STUDIO <span className="text-[#e31937]">W</span>
         </h1>
         <div className="mt-4 mx-auto w-16 h-px bg-gradient-to-r from-transparent via-[#e31937]/60 to-transparent" />
         <p className="text-zinc-400 text-sm mt-4 tracking-wide text-center">

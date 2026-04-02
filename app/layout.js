@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Tesla Skin Generator",
-  description: "Applique une texture sur un gabarit Tesla",
+  title: "Studio W",
+  description: "Personnalise ta Tesla — skin visuel, son de verrouillage et boombox.",
 };
 
 export default function RootLayout({ children }) {
