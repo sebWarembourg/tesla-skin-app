@@ -3,10 +3,12 @@
 import { useState } from "react";
 import SkinGenerator from "./components/SkinGenerator";
 import LockChime from "./components/LockChime";
+import Boombox from "./components/Boombox";
 
 const TABS = [
   { id: "skin", label: "Skin Generator" },
   { id: "lockchime", label: "Lock Chime" },
+  { id: "boombox", label: "Boombox" },
 ];
 
 export default function Home() {
@@ -22,14 +24,14 @@ export default function Home() {
       <div className="relative text-center mb-10 z-10">
         <div className="glow-red" />
         <p className="text-[#e31937] text-[10px] font-semibold tracking-[8px] uppercase mb-3">
-          Tesla Wrap Studio
+          Personalisation
         </p>
         <h1 className="text-4xl md:text-6xl font-extralight tracking-[0.2em] text-white">
-          PERSONALISATION
+          SEB TESLA STUDIO
         </h1>
         <div className="mt-4 mx-auto w-16 h-px bg-gradient-to-r from-transparent via-[#e31937]/60 to-transparent" />
-        <p className="text-zinc-400 text-sm mt-4 max-w-sm tracking-wide">
-          Customise ta Tesla — skin visuel et son de verrouillage.
+        <p className="text-zinc-400 text-sm mt-4 tracking-wide text-center">
+          Customise ta Tesla — skin visuel, son de verrouillage et boombox.
         </p>
       </div>
 
@@ -55,6 +57,7 @@ export default function Home() {
       <div className="relative z-10 w-full flex justify-center">
         {activeTab === "skin" && <SkinGenerator />}
         {activeTab === "lockchime" && <LockChime />}
+        {activeTab === "boombox" && <Boombox />}
       </div>
     </div>
   );
