@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import SkinLibrary from "./SkinLibrary";
 
 const OUTPUT_SIZE = 512;
 
@@ -114,6 +115,17 @@ export default function SkinGenerator() {
     reader.readAsDataURL(file);
   }, [processImage]);
 
+  const handleUrl = useCallback((url) => {
+    const img = new Image();
+    img.src = url;
+    img.onload = () => {
+      setImageSrc(url);
+      sourceImgRef.current = img;
+      setRotation(0); setZoom(1); setOffsetX(0); setOffsetY(0);
+      processImage(img, { rotation: 0, zoom: 1, offsetX: 0, offsetY: 0 });
+    };
+  }, [processImage]);
+
   const handleDrop = useCallback((e) => {
     e.preventDefault();
     setIsDragging(false);
@@ -128,6 +140,7 @@ export default function SkinGenerator() {
   };
 
   return (
+    <>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
 
       <div className="flex flex-col gap-3">
@@ -238,5 +251,9 @@ export default function SkinGenerator() {
         )}
       </div>
     </div>
+    <div className="w-full max-w-3xl mt-8">
+      <SkinLibrary onSelect={handleUrl} />
+    </div>
+    </>
   );
 }
