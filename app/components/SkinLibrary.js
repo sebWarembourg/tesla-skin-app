@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const SKINS = [
   // Fun
@@ -30,18 +30,46 @@ const SKINS = [
 ];
 
 const AXIS = {
-  fun:    { label: "Fun",    color: "text-amber-400",  border: "border-amber-500/30",  bg: "bg-amber-500/5"  },
-  design: { label: "Design", color: "text-violet-400", border: "border-violet-500/30", bg: "bg-violet-500/5" },
-  sport:  { label: "Sport",  color: "text-cyan-400",   border: "border-cyan-500/30",   bg: "bg-cyan-500/5"   },
+  fun:    { label: "Fun",      color: "text-amber-400",   border: "border-amber-500/30",   bg: "bg-amber-500/5"   },
+  design: { label: "Design",   color: "text-violet-400",  border: "border-violet-500/30",  bg: "bg-violet-500/5"  },
+  sport:  { label: "Sport",    color: "text-cyan-400",    border: "border-cyan-500/30",    bg: "bg-cyan-500/5"    },
+  custom: { label: "Mes skins",color: "text-[#e31937]",   border: "border-[#e31937]/30",   bg: "bg-[#e31937]/5"   },
 };
 
-const FILTERS = ["all", "fun", "design", "sport"];
+const FILTERS = ["all", "custom", "fun", "design", "sport"];
 
 export default function SkinLibrary({ onSelect }) {
   const [filter, setFilter] = useState("all");
   const [preview, setPreview] = useState(null);
+  const [customSkins, setCustomSkins] = useState([]);
 
-  const filtered = filter === "all" ? SKINS : SKINS.filter(s => s.axis === filter);
+  const loadCustom = () => {
+    const stored = JSON.parse(localStorage.getItem("custom_skins") || "[]");
+    setCustomSkins(stored);
+  };
+
+  useEffect(() => {
+    loadCustom();
+    window.addEventListener("customSkinsUpdated", loadCustom);
+    return () => window.removeEventListener("customSkinsUpdated", loadCustom);
+  }, []);
+
+  const deleteCustomSkin = (id, e) => {
+    e.stopPropagation();
+    const updated = customSkins.filter(s => s.id !== id);
+    localStorage.setItem("custom_skins", JSON.stringify(updated));
+    setCustomSkins(updated);
+    if (preview?.id === id) setPreview(null);
+  };
+
+  const allSkins = [
+    ...customSkins.map(s => ({ id: s.id, file: s.data, label: s.label, axis: "custom", isCustom: true })),
+    ...SKINS,
+  ];
+
+  const filtered = filter === "all"
+    ? allSkins
+    : allSkins.filter(s => s.axis === filter);
 
   const download = (skin) => {
     const a = document.createElement("a");
@@ -54,20 +82,26 @@ export default function SkinLibrary({ onSelect }) {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <p className="text-zinc-400 text-[10px] tracking-[4px] uppercase">Bibliothèque — Skins</p>
-        <div className="flex gap-1">
-          {FILTERS.map(f => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`text-[9px] font-semibold uppercase tracking-widest px-2.5 py-1 rounded border transition-all ${
-                filter === f
-                  ? "border-[#e31937]/50 bg-[#e31937]/10 text-[#e31937]"
-                  : "border-zinc-700/60 text-zinc-500 hover:text-zinc-300"
-              }`}
-            >
-              {f === "all" ? "Tous" : AXIS[f].label}
-            </button>
-          ))}
+        <div className="flex gap-1 flex-wrap justify-end">
+          {FILTERS.map(f => {
+            if (f === "custom" && customSkins.length === 0) return null;
+            return (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`text-[9px] font-semibold uppercase tracking-widest px-2.5 py-1 rounded border transition-all ${
+                  filter === f
+                    ? "border-[#e31937]/50 bg-[#e31937]/10 text-[#e31937]"
+                    : "border-zinc-700/60 text-zinc-500 hover:text-zinc-300"
+                }`}
+              >
+                {f === "all" ? "Tous" : AXIS[f].label}
+                {f === "custom" && customSkins.length > 0 && (
+                  <span className="ml-1 opacity-60">{customSkins.length}</span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -85,6 +119,15 @@ export default function SkinLibrary({ onSelect }) {
                 alt={skin.label}
                 className="w-full aspect-square object-cover opacity-90 group-hover:opacity-100 transition-opacity"
               />
+              {skin.isCustom && (
+                <button
+                  onClick={(e) => deleteCustomSkin(skin.id, e)}
+                  className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-black/70 text-zinc-500 hover:text-red-400 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Supprimer"
+                >
+                  ×
+                </button>
+              )}
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-2">
                 <p className="text-white text-[10px] font-medium truncate">{skin.label}</p>
                 <span className={`text-[8px] font-semibold uppercase tracking-wider ${ax.color}`}>{ax.label}</span>
@@ -113,6 +156,14 @@ export default function SkinLibrary({ onSelect }) {
                 </span>
               </div>
               <div className="flex gap-2">
+                {preview.isCustom && (
+                  <button
+                    onClick={(e) => deleteCustomSkin(preview.id, e)}
+                    className="text-[10px] font-semibold tracking-widest uppercase text-red-500 hover:text-red-400 border border-red-900/40 hover:border-red-500/40 rounded px-3 py-2 transition-all"
+                  >
+                    Supprimer
+                  </button>
+                )}
                 <button
                   onClick={() => { onSelect(preview.file, preview.label); setPreview(null); }}
                   className="text-[10px] font-semibold tracking-widest uppercase text-zinc-300 hover:text-white border border-zinc-600 hover:border-zinc-400 rounded px-3 py-2 transition-all"

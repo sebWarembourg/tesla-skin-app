@@ -30,6 +30,7 @@ export default function SkinGenerator() {
   const [resultSrc, setResultSrc] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [offsetX, setOffsetX] = useState(0);
@@ -139,8 +140,26 @@ export default function SkinGenerator() {
     a.click();
   };
 
+  const saveToGallery = async () => {
+    const resp = await fetch(resultSrc);
+    const blob = await resp.blob();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target.result;
+      const existing = JSON.parse(localStorage.getItem("custom_skins") || "[]");
+      const id = `custom-${Date.now()}`;
+      const label = `Custom ${existing.length + 1}`;
+      existing.push({ id, label, data: base64, createdAt: Date.now() });
+      localStorage.setItem("custom_skins", JSON.stringify(existing));
+      window.dispatchEvent(new CustomEvent("customSkinsUpdated"));
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    };
+    reader.readAsDataURL(blob);
+  };
+
   return (
-    <>
+    <div className="flex flex-col items-center gap-10 w-full">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
 
       <div className="flex flex-col gap-3">
@@ -242,18 +261,30 @@ export default function SkinGenerator() {
           )}
         </div>
         {resultSrc && (
-          <button
-            onClick={downloadResult}
-            className="bg-[#e31937] hover:bg-[#c01530] transition-colors text-white rounded-lg py-3 px-6 text-xs font-semibold tracking-[2px] uppercase cursor-pointer"
-          >
-            ↓ Télécharger le skin
-          </button>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={downloadResult}
+              className="bg-[#e31937] hover:bg-[#c01530] transition-colors text-white rounded-lg py-3 px-6 text-xs font-semibold tracking-[2px] uppercase cursor-pointer"
+            >
+              ↓ Télécharger le skin
+            </button>
+            <button
+              onClick={saveToGallery}
+              className={`border rounded-lg py-2.5 px-6 text-xs font-semibold tracking-[2px] uppercase cursor-pointer transition-all ${
+                saved
+                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
+                  : "border-zinc-700 bg-white/[0.02] text-zinc-400 hover:border-zinc-500 hover:text-zinc-200"
+              }`}
+            >
+              {saved ? "✓ Enregistré dans la galerie" : "Enregistrer dans la galerie"}
+            </button>
+          </div>
         )}
       </div>
     </div>
     <div className="w-full max-w-3xl mt-8">
       <SkinLibrary onSelect={handleUrl} />
     </div>
-    </>
+    </div>
   );
 }
