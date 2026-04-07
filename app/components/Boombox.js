@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import SoundLibrary from "./SoundLibrary";
 
 const MAX_FILES = 5;
 const WARN_DURATION = 5; // Tesla joue les 5 premières secondes
@@ -77,6 +78,25 @@ export default function Boombox() {
   const removeFile = (index) => {
     setFiles(prev => prev.filter((_, i) => i !== index));
   };
+
+  const addFromUrl = useCallback(async (url, label) => {
+    if (files.length >= MAX_FILES) { setError(`Maximum ${MAX_FILES} fichiers atteint.`); return; }
+    setError(null);
+    setProcessing(true);
+    try {
+      const resp = await fetch(url);
+      const blob = await resp.blob();
+      const arrayBuffer = await blob.arrayBuffer();
+      const duration = await getAudioDuration(arrayBuffer);
+      const safeName = sanitizeFileName(label + ".mp3");
+      const fileUrl = URL.createObjectURL(blob);
+      setFiles(prev => [...prev, { name: safeName, originalName: label, url: fileUrl, duration, size: blob.size }]);
+    } catch {
+      setError(`Impossible de charger ce son.`);
+    } finally {
+      setProcessing(false);
+    }
+  }, [files.length]);
 
   const handleDrop = useCallback((e) => {
     e.preventDefault();
@@ -163,6 +183,8 @@ export default function Boombox() {
           { label: "Clé USB", value: "exFAT / FAT32" },
         ]} />
       </div>
+
+      <SoundLibrary onSelect={addFromUrl} />
 
       {/* File list */}
       {count > 0 && (

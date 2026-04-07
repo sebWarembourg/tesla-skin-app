@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import SoundLibrary from "./SoundLibrary";
 
 const TARGET_SAMPLE_RATE = 44100;
 const MAX_BYTES = 1_000_000; // 1 MB
@@ -117,6 +118,29 @@ export default function LockChime() {
     }
   }, []);
 
+  const handleUrl = useCallback(async (url, label) => {
+    setError(null);
+    setWavUrl(null);
+    setWavSize(null);
+    setDuration(null);
+    setFileName(label);
+    setProcessing(true);
+    try {
+      const resp = await fetch(url);
+      const arrayBuffer = await resp.arrayBuffer();
+      const { wavBuffer, duration } = await convertToLockChime(arrayBuffer);
+      const blob = new Blob([wavBuffer], { type: "audio/wav" });
+      setWavUrl(URL.createObjectURL(blob));
+      setWavSize(blob.size);
+      setDuration(duration);
+    } catch (e) {
+      setError("Impossible de charger ce son.");
+      console.error(e);
+    } finally {
+      setProcessing(false);
+    }
+  }, []);
+
   const handleDrop = useCallback((e) => {
     e.preventDefault();
     setIsDragging(false);
@@ -190,6 +214,8 @@ export default function LockChime() {
           { label: "Nom fichier", value: "LockChime.wav" },
         ]} />
       </div>
+
+      <SoundLibrary onSelect={handleUrl} />
 
       {/* Result */}
       {wavUrl && !processing && (
