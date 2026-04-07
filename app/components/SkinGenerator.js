@@ -140,6 +140,18 @@ export default function SkinGenerator() {
     a.click();
   };
 
+  const resetAll = () => {
+    setImageSrc(null);
+    setResultSrc(null);
+    setRotation(0);
+    setZoom(1);
+    setOffsetX(0);
+    setOffsetY(0);
+    setSaved(false);
+    sourceImgRef.current = null;
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   const saveToGallery = async () => {
     const resp = await fetch(resultSrc);
     const blob = await resp.blob();
@@ -277,6 +289,12 @@ export default function SkinGenerator() {
               }`}
             >
               {saved ? "✓ Enregistré dans la galerie" : "Enregistrer dans la galerie"}
+            </button>
+            <button
+              onClick={resetAll}
+              className="text-zinc-600 hover:text-zinc-400 text-xs text-center transition-colors pt-1"
+            >
+              Recommencer
             </button>
           </div>
         )}
